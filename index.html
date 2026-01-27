@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Protected Site</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.8;
+            font-size: 16px;
+        }
+        
+        .password-form {
+            padding: 40px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input[type="password"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .submit-btn:active {
+            transform: translateY(2px);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .error {
+            background-color: #ffeaea;
+            color: #e74c3c;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #27ae60;
+            border: 1px solid #c3e6cb;
+        }
+        
+        /* Simple Puzzle Styles */
+        .simple-puzzle {
+            display: none;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .puzzle-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .puzzle-instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .click-counter {
+            font-size: 18px;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .puzzle-button {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background-color: #3498db;
+            border: none;
+            border-radius: 50%;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .puzzle-button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        
+        .puzzle-button:active {
+            transform: scale(0.95);
+        }
+        
+        .puzzle-button.clicked {
+            background-color: #27ae60;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #95a5a6;
+            font-size: 14px;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .password-form {
+                padding: 30px 20px;
+            }
+            
+            .puzzle-button {
+                width: 100px;
+                height: 100px;
+                font-size: 28px;
+            }
+        }
+        
+        /* Shake animation */
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
+            20%, 40%, 60%, 80% {transform: translateX(5px);}
+        }
+        
+        /* Success animation */
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .celebrate {
+            animation: celebrate 0.5s ease 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Secure Access</h1>
+            <p>Enter the password to access the protected content</p>
+        </div>
+        
+        <!-- Password Form -->
+        <div class="password-form" id="passwordFormSection">
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="password">Enter Password:</label>
+                    <input type="password" id="password" placeholder="Type password here" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">Access Content</button>
+                
+                <div id="message" class="message"></div>
+            </form>
+        </div>
+        
+        <!-- Simple Puzzle Game (hidden initially) -->
+        <div class="simple-puzzle" id="simplePuzzle">
+            <h2 class="puzzle-title">🎮 Simple Click Puzzle</h2>
+            
+            <div class="puzzle-instructions">
+                <p><strong>Instructions:</strong> Click the button 10 times to proceed. Simple!</p>
+            </div>
+            
+            <div class="click-counter" id="clickCounter">Clicks: 0/10</div>
+            
+            <div class="puzzle-button" id="clickButton">
+                CLICK ME
+            </div>
+            
+            <button class="submit-btn" id="skipPuzzleBtn">Skip Puzzle</button>
+            
+            <div id="puzzleMessage" class="message"></div>
+        </div>
+        
+        <div class="footer">
+            <p>Simple Password Protection System</p>
+        </div>
+    </div>
+
+    <script>
+        // Regular password form handling
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const passwordInput = document.getElementById('password');
+            const messageDiv = document.getElementById('message');
+            const password = passwordInput.value;
+            
+            // Clear previous message
+            messageDiv.style.display = 'none';
+            messageDiv.className = 'message';
+            
+            // Regular user password check
+            if (password === 'gmcigm1523') {
+                // Show success message
+                messageDiv.textContent = '✓ Access granted! Starting puzzle...';
+                messageDiv.className = 'message success';
+                messageDiv.style.display = 'block';
+                
+                // Clear the password field
+                passwordInput.value = '';
+                
+                // Hide password form and show puzzle game after 1 second
+                setTimeout(function() {
+                    document.getElementById('passwordFormSection').style.display = 'none';
+                    document.getElementById('simplePuzzle').style.display = 'block';
+                    startPuzzle();
+                }, 1000);
+            } else {
+                // Show error message
+                messageDiv.textContent = '✗ Incorrect password. Please try again.';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                
+                // Clear the password field and refocus
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Shake animation for wrong password
+                passwordInput.style.animation = 'none';
+                setTimeout(() => {
+                    passwordInput.style.animation = 'shake 0.5s';
+                }, 10);
+            }
+        });
+        
+        // SIMPLE PUZZLE GAME LOGIC
+        let clickCount = 0;
+        const requiredClicks = 10;
+        
+        function startPuzzle() {
+            // Reset click counter
+            clickCount = 0;
+            updateClickCounter();
+            
+            // Setup click button
+            const clickButton = document.getElementById('clickButton');
+            clickButton.textContent = 'CLICK ME';
+            clickButton.classList.remove('clicked');
+            clickButton.classList.remove('celebrate');
+            
+            // Add click event
+            clickButton.onclick = handleClick;
+            
+            // Hide any previous messages
+            document.getElementById('puzzleMessage').style.display = 'none';
+        }
+        
+        function handleClick() {
+            const clickButton = document.getElementById('clickButton');
+            
+            // Increase click count
+            clickCount++;
+            updateClickCounter();
+            
+            // Visual feedback
+            clickButton.classList.add('clicked');
+            
+            // Change button text randomly
+            const clickTexts = ['GOOD!', 'AGAIN!', 'NICE!', 'MORE!', 'YES!', 'WOW!'];
+            clickButton.textContent = clickTexts[Math.floor(Math.random() * clickTexts.length)];
+            
+            // Remove clicked class after animation
+            setTimeout(() => {
+                clickButton.classList.remove('clicked');
+            }, 200);
+            
+            // Check if puzzle is complete
+            if (clickCount >= requiredClicks) {
+                puzzleComplete();
+            }
+        }
+        
+        function updateClickCounter() {
+            document.getElementById('clickCounter').textContent = `Clicks: ${clickCount}/${requiredClicks}`;
+        }
+        
+        function puzzleComplete() {
+            const clickButton = document.getElementById('clickButton');
+            
+            // Disable button
+            clickButton.onclick = null;
+            clickButton.style.cursor = 'default';
+            clickButton.style.backgroundColor = '#27ae60';
+            clickButton.textContent = 'DONE!';
+            
+            // Add celebration animation
+            clickButton.classList.add('celebrate');
+            
+            // Show success message
+            const puzzleMessage = document.getElementById('puzzleMessage');
+            puzzleMessage.textContent = '✅ Puzzle complete! Redirecting...';
+            puzzleMessage.className = 'message success';
+            puzzleMessage.style.display = 'block';
+            
+            // Redirect to protected page after 2 seconds
+            setTimeout(function() {
+                window.location.href = 'projeckrahasia.html';
+            }, 2000);
+        }
+        
+        // Skip puzzle button
+        document.getElementById('skipPuzzleBtn').addEventListener('click', function() {
+            if (confirm("Are you sure you want to skip the puzzle?")) {
+                window.location.href = 'projeckrahasia.html';
+            }
+        });
+    </script>
+</body>
+</html>
