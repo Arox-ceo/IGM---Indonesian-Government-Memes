@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +20,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
         }
         
         .container {
@@ -28,6 +30,7 @@
             border-radius: 15px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            position: relative;
         }
         
         .header {
@@ -35,6 +38,7 @@
             color: white;
             text-align: center;
             padding: 30px 20px;
+            position: relative;
         }
         
         .header h1 {
@@ -95,6 +99,14 @@
             background-color: #2980b9;
         }
         
+        .admin-btn {
+            background-color: #e74c3c;
+        }
+        
+        .admin-btn:hover {
+            background-color: #c0392b;
+        }
+        
         .submit-btn:active {
             transform: translateY(2px);
         }
@@ -120,63 +132,124 @@
             border: 1px solid #c3e6cb;
         }
         
-        /* Simple Puzzle Styles */
-        .simple-puzzle {
+        .password-hint {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        /* Ultra hidden elements - completely invisible to normal users */
+        
+        /* 1. Invisible pixel in top-right corner */
+        .pixel-trigger {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 3px;
+            height: 3px;
+            background-color: transparent;
+            cursor: pointer;
+            z-index: 100;
+        }
+        
+        /* 2. Hidden in the period of the password hint */
+        .period-trigger {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-left: 2px;
+            cursor: pointer;
+        }
+        
+        /* 3. Secret area in the lock emoji */
+        .lock-secret-trigger {
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-130%);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            background: transparent;
+            border-radius: 50%;
+        }
+        
+        /* 4. Hidden in the border shadow */
+        .shadow-trigger {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            cursor: pointer;
+            background: transparent;
+        }
+        
+        /* 5. Invisible text in the footer */
+        .invisible-text {
+            color: white;
+            cursor: pointer;
+            font-size: 0;
+        }
+        
+        /* Admin modal */
+        .admin-modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .admin-modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
             padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .admin-modal-header {
+            background-color: #e74c3c;
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 20px -30px;
+            border-radius: 10px 10px 0 0;
             text-align: center;
         }
         
-        .puzzle-title {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 24px;
+        .admin-modal-header h2 {
+            font-size: 22px;
         }
         
-        .puzzle-instructions {
+        .admin-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .admin-instructions {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
-            color: #666;
             font-size: 14px;
-        }
-        
-        .click-counter {
-            font-size: 18px;
-            color: #e74c3c;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        
-        .puzzle-button {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            background-color: #3498db;
-            border: none;
-            border-radius: 50%;
-            font-size: 32px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        
-        .puzzle-button:hover {
-            background-color: #2980b9;
-            transform: scale(1.05);
-        }
-        
-        .puzzle-button:active {
-            transform: scale(0.95);
-        }
-        
-        .puzzle-button.clicked {
-            background-color: #27ae60;
+            color: #666;
         }
         
         .footer {
@@ -185,6 +258,7 @@
             color: #95a5a6;
             font-size: 14px;
             border-top: 1px solid #ecf0f1;
+            position: relative;
         }
         
         @media (max-width: 600px) {
@@ -200,40 +274,46 @@
                 padding: 30px 20px;
             }
             
-            .puzzle-button {
-                width: 100px;
-                height: 100px;
-                font-size: 28px;
+            .admin-modal-content {
+                padding: 20px;
             }
         }
         
-        /* Shake animation */
+        /* Shake animation for wrong password */
         @keyframes shake {
             0%, 100% {transform: translateX(0);}
             10%, 30%, 50%, 70%, 90% {transform: translateX(-5px);}
             20%, 40%, 60%, 80% {transform: translateX(5px);}
         }
         
-        /* Success animation */
-        @keyframes celebrate {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        /* Animation for secret reveal */
+        @keyframes secretFlash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
         
-        .celebrate {
-            animation: celebrate 0.5s ease 3;
+        .secret-flash {
+            animation: secretFlash 0.3s 3;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 1. Invisible pixel trigger (top-right corner) -->
+        <div class="pixel-trigger" id="pixelTrigger" title="Admin Access"></div>
+        
+        <!-- 2. Secret area in the lock emoji -->
+        <div class="lock-secret-trigger" id="lockTrigger" title="Admin Access"></div>
+        
+        <!-- 3. Hidden in the shadow at bottom -->
+        <div class="shadow-trigger" id="shadowTrigger" title="Admin Access"></div>
+        
         <div class="header">
             <h1>🔒 Secure Access</h1>
             <p>Enter the password to access the protected content</p>
         </div>
         
-        <!-- Password Form -->
-        <div class="password-form" id="passwordFormSection">
+        <div class="password-form">
             <form id="passwordForm">
                 <div class="form-group">
                     <label for="password">Enter Password:</label>
@@ -243,30 +323,39 @@
                 <button type="submit" class="submit-btn">Access Content</button>
                 
                 <div id="message" class="message"></div>
+                
+    
             </form>
         </div>
         
-        <!-- Simple Puzzle Game (hidden initially) -->
-        <div class="simple-puzzle" id="simplePuzzle">
-            <h2 class="puzzle-title">🎮 Simple Click Puzzle</h2>
-            
-            <div class="puzzle-instructions">
-                <p><strong>Instructions:</strong> Click the button 10 times to proceed. Simple!</p>
-            </div>
-            
-            <div class="click-counter" id="clickCounter">Clicks: 0/10</div>
-            
-            <div class="puzzle-button" id="clickButton">
-                CLICK ME
-            </div>
-            
-            <button class="submit-btn" id="skipPuzzleBtn">Skip Puzzle</button>
-            
-            <div id="puzzleMessage" class="message"></div>
-        </div>
-        
         <div class="footer">
-            <p>Simple Password Protection System</p>
+            <p>Simple Password Protection System<span class="invisible-text" id="invisibleText"> admin</span></p>
+        </div>
+    </div>
+    
+    <!-- Admin Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h2>🔐 Admin Panel Access</h2>
+                <button class="admin-modal-close" id="adminModalClose">&times;</button>
+            </div>
+            
+            <div class="admin-instructions">
+                <p><strong>Admin Access Required</strong><br>
+                Enter the admin password to access the administrative controls.</p>
+            </div>
+            
+            <form id="adminPasswordForm">
+                <div class="form-group">
+                    <label for="adminPassword">Admin Password:</label>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password" required>
+                </div>
+                
+                <button type="submit" class="submit-btn admin-btn">Access Admin Panel</button>
+                
+                <div id="adminMessage" class="message"></div>
+            </form>
         </div>
     </div>
 
@@ -286,19 +375,17 @@
             // Regular user password check
             if (password === 'gmcigm1523') {
                 // Show success message
-                messageDiv.textContent = '✓ Access granted! Starting puzzle...';
+                messageDiv.textContent = '✓ Access granted! Redirecting...';
                 messageDiv.className = 'message success';
                 messageDiv.style.display = 'block';
                 
                 // Clear the password field
                 passwordInput.value = '';
                 
-                // Hide password form and show puzzle game after 1 second
+                // Redirect to the protected page after 1.5 seconds
                 setTimeout(function() {
-                    document.getElementById('passwordFormSection').style.display = 'none';
-                    document.getElementById('simplePuzzle').style.display = 'block';
-                    startPuzzle();
-                }, 1000);
+                    window.location.href = 'projeckrahasia.html';
+                }, 1500);
             } else {
                 // Show error message
                 messageDiv.textContent = '✗ Incorrect password. Please try again.';
@@ -317,86 +404,202 @@
             }
         });
         
-        // SIMPLE PUZZLE GAME LOGIC
-        let clickCount = 0;
-        const requiredClicks = 10;
+        // Ultra hidden admin triggers - completely invisible
+        const hiddenTriggers = [
+            'pixelTrigger',
+            'periodTrigger',
+            'lockTrigger',
+            'shadowTrigger',
+            'invisibleText'
+        ];
         
-        function startPuzzle() {
-            // Reset click counter
-            clickCount = 0;
-            updateClickCounter();
-            
-            // Setup click button
-            const clickButton = document.getElementById('clickButton');
-            clickButton.textContent = 'CLICK ME';
-            clickButton.classList.remove('clicked');
-            clickButton.classList.remove('celebrate');
-            
-            // Add click event
-            clickButton.onclick = handleClick;
-            
-            // Hide any previous messages
-            document.getElementById('puzzleMessage').style.display = 'none';
-        }
-        
-        function handleClick() {
-            const clickButton = document.getElementById('clickButton');
-            
-            // Increase click count
-            clickCount++;
-            updateClickCounter();
-            
-            // Visual feedback
-            clickButton.classList.add('clicked');
-            
-            // Change button text randomly
-            const clickTexts = ['GOOD!', 'AGAIN!', 'NICE!', 'MORE!', 'YES!', 'WOW!'];
-            clickButton.textContent = clickTexts[Math.floor(Math.random() * clickTexts.length)];
-            
-            // Remove clicked class after animation
-            setTimeout(() => {
-                clickButton.classList.remove('clicked');
-            }, 200);
-            
-            // Check if puzzle is complete
-            if (clickCount >= requiredClicks) {
-                puzzleComplete();
+        // Add click event to all hidden triggers
+        hiddenTriggers.forEach(triggerId => {
+            const element = document.getElementById(triggerId);
+            if (element) {
+                element.addEventListener('click', function() {
+                    // Show the admin modal
+                    document.getElementById('adminModal').style.display = 'flex';
+                    document.getElementById('adminPassword').focus();
+                    
+                    // Add a subtle visual feedback that's barely noticeable
+                    document.body.classList.add('secret-flash');
+                    setTimeout(() => {
+                        document.body.classList.remove('secret-flash');
+                    }, 1000);
+                });
             }
-        }
+        });
         
-        function updateClickCounter() {
-            document.getElementById('clickCounter').textContent = `Clicks: ${clickCount}/${requiredClicks}`;
-        }
+        // Close admin modal
+        document.getElementById('adminModalClose').addEventListener('click', function() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminMessage').style.display = 'none';
+        });
         
-        function puzzleComplete() {
-            const clickButton = document.getElementById('clickButton');
-            
-            // Disable button
-            clickButton.onclick = null;
-            clickButton.style.cursor = 'default';
-            clickButton.style.backgroundColor = '#27ae60';
-            clickButton.textContent = 'DONE!';
-            
-            // Add celebration animation
-            clickButton.classList.add('celebrate');
-            
-            // Show success message
-            const puzzleMessage = document.getElementById('puzzleMessage');
-            puzzleMessage.textContent = '✅ Puzzle complete! Redirecting...';
-            puzzleMessage.className = 'message success';
-            puzzleMessage.style.display = 'block';
-            
-            // Redirect to protected page after 2 seconds
-            setTimeout(function() {
-                window.location.href = 'projeckrahasia.html';
-            }, 2000);
-        }
-        
-        // Skip puzzle button
-        document.getElementById('skipPuzzleBtn').addEventListener('click', function() {
-            if (confirm("Are you sure you want to skip the puzzle?")) {
-                window.location.href = 'projeckrahasia.html';
+        // Close modal when clicking outside
+        document.getElementById('adminModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                document.getElementById('adminModal').style.display = 'none';
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminMessage').style.display = 'none';
             }
+        });
+        
+        // Admin password form handling
+        document.getElementById('adminPasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const adminPasswordInput = document.getElementById('adminPassword');
+            const adminMessageDiv = document.getElementById('adminMessage');
+            const adminPassword = adminPasswordInput.value;
+            
+            // Clear previous message
+            adminMessageDiv.style.display = 'none';
+            adminMessageDiv.className = 'message';
+            
+            // Admin password check
+            if (adminPassword === 'senaiaroi') {
+                // Show success message
+                adminMessageDiv.textContent = '✓ Admin access granted! Redirecting...';
+                adminMessageDiv.className = 'message success';
+                adminMessageDiv.style.display = 'block';
+                
+                // Clear the password field
+                adminPasswordInput.value = '';
+                
+                // Redirect to the admin panel after 1.5 seconds
+                setTimeout(function() {
+                    window.location.href = 'projeckrahasia.html';
+                }, 1500);
+            } else {
+                // Show error message
+                adminMessageDiv.textContent = '✗ Incorrect admin password. Access denied.';
+                adminMessageDiv.className = 'message error';
+                adminMessageDiv.style.display = 'block';
+                
+                // Clear the password field and refocus
+                adminPasswordInput.value = '';
+                adminPasswordInput.focus();
+                
+                // Shake animation for wrong password
+                adminPasswordInput.style.animation = 'none';
+                setTimeout(() => {
+                    adminPasswordInput.style.animation = 'shake 0.5s';
+                }, 10);
+            }
+        });
+        
+        // SECRET ACTIVATION METHODS - Completely hidden
+        
+        // 1. Secret key combination (Ctrl + Alt + A)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'a') {
+                e.preventDefault();
+                document.getElementById('adminModal').style.display = 'flex';
+                document.getElementById('adminPassword').focus();
+            }
+        });
+        
+        // 2. Secret mouse pattern (draw a circle around the lock)
+        let mousePath = [];
+        let mouseTimer;
+        
+        document.addEventListener('mousemove', function(e) {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const radius = 100;
+            
+            mousePath.push({x: e.clientX, y: e.clientY, time: Date.now()});
+            
+            // Keep only last 2 seconds of movement
+            mousePath = mousePath.filter(point => Date.now() - point.time < 2000);
+            
+            // Check if user drew a circle around the center
+            if (mousePath.length > 20) {
+                let circlePoints = 0;
+                for (let i = 0; i < mousePath.length; i++) {
+                    const dx = mousePath[i].x - centerX;
+                    const dy = mousePath[i].y - centerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (Math.abs(distance - radius) < 30) {
+                        circlePoints++;
+                    }
+                }
+                
+                if (circlePoints > mousePath.length * 0.7) {
+                    document.getElementById('adminModal').style.display = 'flex';
+                    document.getElementById('adminPassword').focus();
+                    mousePath = []; // Reset
+                }
+            }
+        });
+        
+        // 3. Secret right-click pattern (3 rapid right-clicks)
+        let rightClickCount = 0;
+        let rightClickTimer;
+        
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            rightClickCount++;
+            
+            if (rightClickCount === 3) {
+                clearTimeout(rightClickTimer);
+                document.getElementById('adminModal').style.display = 'flex';
+                document.getElementById('adminPassword').focus();
+                rightClickCount = 0;
+            }
+            
+            clearTimeout(rightClickTimer);
+            rightClickTimer = setTimeout(() => {
+                rightClickCount = 0;
+            }, 1000);
+        });
+        
+        // 4. Secret sequence in password field (type "admin" then backspace)
+        let passwordSequence = [];
+        const passwordSecret = ['a', 'd', 'm', 'i', 'n', 'Backspace'];
+        
+        document.getElementById('password').addEventListener('keydown', function(e) {
+            passwordSequence.push(e.key);
+            
+            if (passwordSequence.length > passwordSecret.length) {
+                passwordSequence.shift();
+            }
+            
+            if (passwordSequence.join(',') === passwordSecret.join(',')) {
+                document.getElementById('adminModal').style.display = 'flex';
+                document.getElementById('adminPassword').focus();
+                passwordSequence = [];
+            }
+        });
+        
+        // 5. Secret click on specific coordinates
+        document.addEventListener('click', function(e) {
+            // Click at exactly 10px from top and 10px from right
+            if (e.clientX > window.innerWidth - 20 && e.clientX < window.innerWidth - 10 &&
+                e.clientY > 10 && e.clientY < 20) {
+                document.getElementById('adminModal').style.display = 'flex';
+                document.getElementById('adminPassword').focus();
+            }
+        });
+        
+        // 6. Secret double-tap on mobile
+        let lastTap = 0;
+        document.addEventListener('touchstart', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                // Double tap detected
+                if (e.touches.length === 3) { // Triple finger double-tap
+                    document.getElementById('adminModal').style.display = 'flex';
+                    document.getElementById('adminPassword').focus();
+                }
+            }
+            lastTap = currentTime;
         });
     </script>
 </body>
